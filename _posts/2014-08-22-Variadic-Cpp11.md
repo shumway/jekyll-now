@@ -144,6 +144,6 @@ just works. For applications that require  C++, techniques like this can be used
 to lean on the compiler to build general solutions that were not possible before
 C++11.
 
-[ProfGarnetChan]: http://www.princeton.edu/chemistry/faculty/profiles/chan/
+[ProfGarnetChan]: http://chemists.princeton.edu/chan/
 [C++Style]: http://youtu.be/0iWb_qi2-uI
 [TailCall]: http://en.wikipedia.org/wiki/Tail_call
