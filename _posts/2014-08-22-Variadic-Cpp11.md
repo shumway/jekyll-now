@@ -53,7 +53,7 @@ generates the necessary specializations at run time. For example, we could
 write,
 
 ~~~ cpp
-template<class... Args>p
+template<class... Args>
 std::string ToString(const Args&... args)
 {
    // Horrors!  This compiles, but we can't do anything  
