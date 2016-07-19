@@ -3,8 +3,6 @@ layout: post
 title: GitHUB and LinkedIn
 ---
 
-I decided not to wait until August 22nd, 2015 for my next post!
-
 I’ve been thinking a lot about careers and how people can succeed in today’s job
 market. As a computational physics professor, students would sometimes ask me
 about how to find jobs that use programming, math, and physics. Now, working for
