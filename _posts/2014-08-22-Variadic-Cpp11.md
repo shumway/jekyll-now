@@ -33,9 +33,11 @@ std::string ToString(const T1& arg1, const T2& arg2, const T3& arg3) {
 
 This function takes three objects of any type and concatenates them into a 
 string using their `operator<<(stream&, OBJ)` functions. For example,
+
 ~~~ cpp
 ToString("I give this a ", 3, "-star rating")
 ~~~
+
 would return the string “I give this a 3-star rating”.
 
 The problem: while this function is straightforward to read, it is hard-coded
@@ -51,11 +53,11 @@ generates the necessary specializations at run time. For example, we could
 write,
 
 ~~~ cpp
-template<class... Args>
+template<class... Args>p
 std::string ToString(const Args&... args)
 {
    // Horrors!  This compiles, but we can't do anything  
-   // with args because we don't know the types! 
+   // with args because we don't know the types!a
    // This special case is only useful when args is empty. 
    return ""; 
  }
@@ -79,6 +81,7 @@ Having used a stringstream buffer to convert the head object to a
 string, we call `ToString` again, this time the first argument is the 
 stringstream buffer.
 Now we need another specialization:
+
 ~~~ cpp
 template<class T1, class... Args>
 std::string ToString(
@@ -92,14 +95,17 @@ This is beautiful, from an algorithmic point of view. Once we have the
 buffer, we can grab the next element and append it to the buffer, then repeat
 recursively. The last step is to close the recursion, when we only have one
 argument that is the buffer,
+
 ~~~ cpp
 std::string ToString(const std::stringstream& buffer) 
 {
    return buffer.str();
 }
 ~~~
+
 This code should just work. However, the way C++ matches templates, it can be
 important to put the specializations first. The final, working code is
+
 ~~~ cpp
 template<class... Args> std::string
 ToString(const Args&... args) {
