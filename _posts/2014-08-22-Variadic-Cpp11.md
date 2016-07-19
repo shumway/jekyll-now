@@ -14,8 +14,9 @@ language. If you are a C++ programmer I would recommend Bjarne Stroustrup’s
 [talk on  “C++11 Style” on YouTube][C++Style].
 
 In this blog post I want to describe an advanced feature of C++11, variadic
-templates, and how they work with recursive programming. While recursive
-techniques, especially tail-call recursion, are very common in functional
+templates, and how they work with recursive programming. 
+While recursive techniques, especially [tail-call recursion][TailCall],
+are very common in functional
 languages, most C programmers are more comfortable with an imperative style.
 Using C++11 variadic templates effectively often requires tail call recursion.
 
@@ -73,46 +74,70 @@ std::string ToString(const T1& head, const Args&... tail)
 }
 ~~~
 
-Note the recursion in the last line of the function. Having used
-stringstream buffer to convert the head object to a string, we call ToString
-again, this time the first argument is the stringstream buffer. Now we need
-another specialization:
-
+Note the recursion in the last line of the function.
+Having used a stringstream buffer to convert the head object to a 
+string, we call `ToString` again, this time the first argument is the 
+stringstream buffer.
+Now we need another specialization:
 ~~~ cpp
 template<class T1, class... Args>
 std::string ToString(
-    const std::stringstream& buffer, const T1& head, const Args&... tail) {
+    const std::stringstream& buffer,
+    const T1& head, const Args&... tail) {
   return ToString(buffer << head, tail);
 }
 ~~~
- This is beautiful, from an algorithmic point of view. Once we have the
+
+This is beautiful, from an algorithmic point of view. Once we have the
 buffer, we can grab the next element and append it to the buffer, then repeat
 recursively. The last step is to close the recursion, when we only have one
 argument that is the buffer,
-
-std::string ToString(const std::stringstream& buffer) { return buffer.str(); }
+~~~ cpp
+std::string ToString(const std::stringstream& buffer) 
+{
+   return buffer.str();
+}
+~~~
 This code should just work. However, the way C++ matches templates, it can be
 important to put the specializations first. The final, working code is
+~~~ cpp
+template<class... Args> std::string
+ToString(const Args&... args) {
+  // This special case is only called when args is empty.
+  return ""; 
+}
 
-template<class... Args> std::string ToString(const Args&... args) { // This
-special case is only called when args is empty. return ""; }
+std::string ToString(const std::stringstream& buffer)
+{ 
+  return buffer.str(); 
+}
 
-std::string ToString(const std::stringstream& buffer) { return buffer.str(); }
+std::string ToString(
+  const std::stringstream& buffer, const T1& head, 
+  const Args&... tail)
+{ 
+  return ToString(buffer << head, tail); 
+}
 
-std::string ToString(const std::stringstream& buffer, const T1& head, const
-Args&... tail) { return ToString(buffer << head, tail); }
+template<class T1, class... Args>
+std::string ToString(const T1& head, const Args&... tail)
+{ 
+  std::stringstream buffer; 
+  return ToString(buffer << head, tail);
+}
+~~~
 
-template<class T1, class... Args> std::string ToString(const T1& head, const
-Args&... tail) { std::stringstream buffer; return ToString(buffer << head,
-tail); } This example is not the prettiest code, but it should clearly
+This example is not the prettiest code, but it should clearly
 demonstrate how variadic templates can be used in generic programming. The
 ugliness comes from a template syntax, and is an artifact of the strong typing
 in C++. The four short functions here are typical of functional languages, where
 pattern matching and recursion are used more than in procedural languages.  Once
-this is implemented, however, the real simplicity is that the ToString function
+this is implemented, however, 
+the real simplicity is that the `ToString` function
 just works. For applications that require  C++, techniques like this can be used
 to lean on the compiler to build general solutions that were not possible before
 C++11.
 
 [ProfGarnetChan]: http://www.princeton.edu/chemistry/faculty/profiles/chan/
 [C++Style]: http://youtu.be/0iWb_qi2-uI
+[TailCall]: http://en.wikipedia.org/wiki/Tail_call
