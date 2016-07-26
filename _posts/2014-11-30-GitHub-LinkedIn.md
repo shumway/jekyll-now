@@ -1,6 +1,6 @@
 ---
 layout: post
-title: GitHUB and LinkedIn
+title: GitHub and LinkedIn
 ---
 
 I’ve been thinking a lot about careers and how people can succeed in today’s job
